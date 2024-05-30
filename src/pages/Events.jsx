@@ -9,7 +9,7 @@ const EventCard = ({ event }) => {
   };
 
   return (
-    <Box borderWidth="1px" borderRadius="lg" overflow="hidden" p={4} mb={4}>
+    <Box borderWidth="1px" borderRadius="lg" overflow="hidden" p={4} mb={4} width="100%" maxWidth="600px">
       <Heading size="md" mb={2}>{event.name}</Heading>
       <Text>Date: {new Date(event.date).toLocaleDateString()}</Text>
       <Text>Description: {event.description}</Text>
