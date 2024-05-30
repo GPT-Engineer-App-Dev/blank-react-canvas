@@ -1,6 +1,9 @@
-import { Container, Box } from "@chakra-ui/react";
+import { Container, Box, Button } from "@chakra-ui/react";
+import { useNavigate } from "react-router-dom";
 
 const Index = () => {
+  const navigate = useNavigate();
+
   return (
     <Container centerContent maxW="container.md" height="100vh" display="flex" flexDirection="column" justifyContent="center" alignItems="center">
       <Box 
@@ -11,6 +14,7 @@ const Index = () => {
         borderColor="gray.200" 
         borderRadius="md"
       />
+    <Button mt={4} colorScheme="teal" onClick={() => navigate('/events')}>View Events</Button>
     </Container>
   );
 };
