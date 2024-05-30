@@ -1,6 +1,7 @@
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import Index from "./pages/Index.jsx";
 import Events from "./pages/Events.jsx"; // Import the new Events page
+import CreateEvent from "./pages/CreateEvent.jsx"; // Import the new CreateEvent page
 
 function App() {
   return (
@@ -8,6 +9,7 @@ function App() {
       <Routes>
         <Route exact path="/" element={<Index />} />
       <Route path="/events" element={<Events />} /> {/* Add the route for the Events page */}
+      <Route path="/create-event" element={<CreateEvent />} /> {/* Add the route for the CreateEvent page */}
       </Routes>
     </Router>
   );

@@ -18,7 +18,7 @@ const Index = () => {
     <Container centerContent maxW="container.md" height="100vh" display="flex" flexDirection="column" justifyContent="center" alignItems="center">
       <Box width="100%" display="flex" justifyContent="space-between" alignItems="center" mb={4}>
         <Heading as="h1" size="lg">Events</Heading>
-        <Button colorScheme="teal" onClick={() => navigate('/create-event')}>Create Event</Button>
+        <Button colorScheme="teal" onClick={() => navigate('/create-event')}>Create Event</Button> {/* Add button to navigate to CreateEvent page */}
       </Box>
       {isLoading && <Text>Loading...</Text>}
       {error && <Text>Error loading events</Text>}
