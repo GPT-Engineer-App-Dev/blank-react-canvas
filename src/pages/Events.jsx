@@ -15,12 +15,22 @@ const EventCard = ({ event }) => {
   };
 
   return (
-    <Box borderWidth="1px" borderRadius="lg" overflow="hidden" p={4} mb={4} width="100%" maxWidth="600px">
+    <Box
+      borderWidth="1px"
+      borderRadius="lg"
+      overflow="hidden"
+      p={4}
+      mb={4}
+      width="100%"
+      maxWidth="600px"
+      onClick={handleViewDetails}
+      cursor="pointer"
+      _hover={{ bg: "gray.100" }}
+    >
       <Heading size="md" mb={2}>{event.name}</Heading>
       <Text>Date: {new Date(event.date).toLocaleDateString()}</Text>
       <Text>Description: {event.description}</Text>
       <Button mt={4} colorScheme="teal" onClick={handleSignup}>Sign Up</Button>
-      <Button mt={4} colorScheme="blue" onClick={handleViewDetails}>View Details</Button>
     </Box>
   );
 };
