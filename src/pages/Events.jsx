@@ -1,11 +1,17 @@
 import { Box, Button, Container, Heading, Text, VStack } from "@chakra-ui/react";
+import { useNavigate } from "react-router-dom";
 import { useEvents, useAddEventSignup } from "../integrations/supabase/index.js";
 
 const EventCard = ({ event }) => {
   const addEventSignup = useAddEventSignup();
+  const navigate = useNavigate();
 
   const handleSignup = () => {
     addEventSignup.mutate({ event_id: event.id, name: "User Name", email: "user@example.com" });
+  };
+
+  const handleViewDetails = () => {
+    navigate(`/events/${event.id}`);
   };
 
   return (
@@ -14,6 +20,7 @@ const EventCard = ({ event }) => {
       <Text>Date: {new Date(event.date).toLocaleDateString()}</Text>
       <Text>Description: {event.description}</Text>
       <Button mt={4} colorScheme="teal" onClick={handleSignup}>Sign Up</Button>
+      <Button mt={4} colorScheme="blue" onClick={handleViewDetails}>View Details</Button>
     </Box>
   );
 };
