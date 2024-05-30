@@ -1,4 +1,4 @@
-import { Box, Container, Heading, Text, VStack, Button, useToast, FormControl, FormLabel, Input, Textarea } from "@chakra-ui/react";
+import { Box, Container, Heading, Text, VStack, Button, useToast, FormControl, FormLabel, Input, Textarea, useDisclosure, Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton } from "@chakra-ui/react";
 import { useVenues, useAddVenue, useDeleteVenue, useUpdateVenue } from "../integrations/supabase/index.js";
 import { useState } from "react";
 
@@ -24,6 +24,8 @@ const Venues = () => {
   const [isUpdating, setIsUpdating] = useState(false);
   const [venueIdToUpdate, setVenueIdToUpdate] = useState(null);
 
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
   const handleAddVenue = async () => {
     try {
       await addVenue.mutateAsync({ name, location, description });
@@ -37,6 +39,7 @@ const Venues = () => {
       setName("");
       setLocation("");
       setDescription("");
+      onClose();
     } catch (error) {
       toast({
         title: "Error.",
@@ -84,6 +87,7 @@ const Venues = () => {
       setDescription("");
       setIsUpdating(false);
       setVenueIdToUpdate(null);
+      onClose();
     } catch (error) {
       toast({
         title: "Error.",
@@ -101,6 +105,16 @@ const Venues = () => {
     setDescription(venue.description);
     setIsUpdating(true);
     setVenueIdToUpdate(venue.id);
+    onOpen();
+  };
+
+  const handleAddClick = () => {
+    setName("");
+    setLocation("");
+    setDescription("");
+    setIsUpdating(false);
+    setVenueIdToUpdate(null);
+    onOpen();
   };
 
   if (isLoading) return <Text>Loading...</Text>;
@@ -114,24 +128,34 @@ const Venues = () => {
           <VenueCard key={venue.id} venue={venue} onDelete={handleDeleteVenue} onUpdate={handleEditClick} />
         ))}
       </VStack>
-      <Box mt={6} width="100%">
-        <Heading size="md" mb={4}>{isUpdating ? "Update Venue" : "Add Venue"}</Heading>
-        <FormControl id="name" isRequired>
-          <FormLabel>Venue Name</FormLabel>
-          <Input type="text" value={name} onChange={(e) => setName(e.target.value)} />
-        </FormControl>
-        <FormControl id="location" isRequired>
-          <FormLabel>Venue Location</FormLabel>
-          <Input type="text" value={location} onChange={(e) => setLocation(e.target.value)} />
-        </FormControl>
-        <FormControl id="description" isRequired>
-          <FormLabel>Venue Description</FormLabel>
-          <Textarea value={description} onChange={(e) => setDescription(e.target.value)} />
-        </FormControl>
-        <Button mt={4} colorScheme="teal" onClick={isUpdating ? handleUpdateVenue : handleAddVenue}>
-          {isUpdating ? "Update Venue" : "Add Venue"}
-        </Button>
-      </Box>
+      <Button mt={6} colorScheme="teal" onClick={handleAddClick}>Add Venue</Button>
+
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>{isUpdating ? "Update Venue" : "Add Venue"}</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <FormControl id="name" isRequired>
+              <FormLabel>Venue Name</FormLabel>
+              <Input type="text" value={name} onChange={(e) => setName(e.target.value)} />
+            </FormControl>
+            <FormControl id="location" isRequired>
+              <FormLabel>Venue Location</FormLabel>
+              <Input type="text" value={location} onChange={(e) => setLocation(e.target.value)} />
+            </FormControl>
+            <FormControl id="description" isRequired>
+              <FormLabel>Venue Description</FormLabel>
+              <Textarea value={description} onChange={(e) => setDescription(e.target.value)} />
+            </FormControl>
+          </ModalBody>
+          <ModalFooter>
+            <Button colorScheme="teal" onClick={isUpdating ? handleUpdateVenue : handleAddVenue}>
+              {isUpdating ? "Update Venue" : "Add Venue"}
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </Container>
   );
 };
