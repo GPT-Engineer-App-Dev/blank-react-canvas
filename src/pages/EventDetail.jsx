@@ -1,5 +1,6 @@
 import { useParams } from "react-router-dom";
-import { Box, Container, Heading, Text, VStack, Divider, FormControl, FormLabel, Textarea, Button, useToast } from "@chakra-ui/react";
+import { Box, Container, Heading, Text, VStack, Divider, FormControl, FormLabel, Textarea, Button, useToast, IconButton, HStack } from "@chakra-ui/react";
+import { FaThumbsUp, FaThumbsDown, FaLaugh, FaSadTear } from "react-icons/fa";
 import { useState, useEffect } from "react";
 import { useEvents, useComments, useAddComment } from "../integrations/supabase/index.js";
 
@@ -13,6 +14,7 @@ const EventDetail = () => {
   const [commentContent, setCommentContent] = useState("");
   const [feedbackContent, setFeedbackContent] = useState("");
   const [wordCloudData, setWordCloudData] = useState([]);
+  const [reactions, setReactions] = useState({});
 
   useEffect(() => {
     if (comments) {
@@ -92,6 +94,13 @@ const EventDetail = () => {
     }
   };
 
+  const handleReaction = (commentId, emoji) => {
+    setReactions(prevReactions => ({
+      ...prevReactions,
+      [commentId]: emoji,
+    }));
+  };
+
   return (
     <Container maxW="container.md" mt={4}>
       <Heading mb={4}>{event.name}</Heading>
@@ -106,6 +115,32 @@ const EventDetail = () => {
             <Box key={comment.id} p={4} borderWidth="1px" borderRadius="lg" width="100%">
               <Text>{comment.content}</Text>
               <Text fontSize="sm" color="gray.500">Posted on: {new Date(comment.created_at).toLocaleDateString()}</Text>
+              <HStack spacing={2} mt={2}>
+                <IconButton
+                  icon={<FaThumbsUp />}
+                  aria-label="Like"
+                  onClick={() => handleReaction(comment.id, 'like')}
+                  colorScheme={reactions[comment.id] === 'like' ? 'teal' : 'gray'}
+                />
+                <IconButton
+                  icon={<FaThumbsDown />}
+                  aria-label="Dislike"
+                  onClick={() => handleReaction(comment.id, 'dislike')}
+                  colorScheme={reactions[comment.id] === 'dislike' ? 'teal' : 'gray'}
+                />
+                <IconButton
+                  icon={<FaLaugh />}
+                  aria-label="Laugh"
+                  onClick={() => handleReaction(comment.id, 'laugh')}
+                  colorScheme={reactions[comment.id] === 'laugh' ? 'teal' : 'gray'}
+                />
+                <IconButton
+                  icon={<FaSadTear />}
+                  aria-label="Sad"
+                  onClick={() => handleReaction(comment.id, 'sad')}
+                  colorScheme={reactions[comment.id] === 'sad' ? 'teal' : 'gray'}
+                />
+              </HStack>
             </Box>
           ))
         ) : (
