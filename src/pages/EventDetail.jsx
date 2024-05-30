@@ -11,6 +11,7 @@ const EventDetail = () => {
   const addComment = useAddComment();
   const toast = useToast();
   const [commentContent, setCommentContent] = useState("");
+  const [feedbackContent, setFeedbackContent] = useState("");
 
   if (eventsLoading || commentsLoading) return <Text>Loading...</Text>;
   if (eventsError) return <Text>Error loading event details</Text>;
@@ -43,6 +44,29 @@ const EventDetail = () => {
     }
   };
 
+  const handleFeedbackSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await addComment.mutateAsync({ content: feedbackContent, event_id: event.id });
+      toast({
+        title: "Feedback submitted.",
+        description: "Your feedback has been submitted successfully.",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+      });
+      setFeedbackContent("");
+    } catch (error) {
+      toast({
+        title: "Error.",
+        description: "There was an error submitting your feedback.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+    }
+  };
+
   return (
     <Container maxW="container.md" mt={4}>
       <Heading mb={4}>{event.name}</Heading>
@@ -62,13 +86,20 @@ const EventDetail = () => {
           <Text>No comments yet.</Text>
         )}
       </VStack>
-    <Divider my={6} />
+      <Divider my={6} />
       <Heading size="md" mb={4}>Add a Comment</Heading>
       <FormControl id="comment" isRequired>
         <FormLabel>Comment</FormLabel>
         <Textarea value={commentContent} onChange={(e) => setCommentContent(e.target.value)} />
       </FormControl>
       <Button mt={4} colorScheme="teal" onClick={handleAddComment}>Add Comment</Button>
+      <Box as="form" onSubmit={handleFeedbackSubmit} mt={6}>
+        <FormControl id="feedback" isRequired>
+          <FormLabel>Submit Feedback</FormLabel>
+          <Textarea value={feedbackContent} onChange={(e) => setFeedbackContent(e.target.value)} />
+        </FormControl>
+        <Button type="submit" colorScheme="teal" mt={4}>Submit Feedback</Button>
+      </Box>
     </Container>
   );
 };
