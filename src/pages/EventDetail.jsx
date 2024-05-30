@@ -74,6 +74,7 @@ const EventDetail = () => {
       <Text>Description: {event.description}</Text>
       <Divider my={6} />
       <Heading size="md" mb={4}>Comments</Heading>
+      <Text mb={4}>Share your thoughts and opinions about this event.</Text>
       <VStack spacing={4} align="start">
         {eventComments.length > 0 ? (
           eventComments.map(comment => (
@@ -88,14 +89,18 @@ const EventDetail = () => {
       </VStack>
       <Divider my={6} />
       <Heading size="md" mb={4}>Add a Comment</Heading>
+      <Text mb={4}>Join the discussion by adding your comment below.</Text>
       <FormControl id="comment" isRequired>
         <FormLabel>Comment</FormLabel>
         <Textarea value={commentContent} onChange={(e) => setCommentContent(e.target.value)} />
       </FormControl>
       <Button mt={4} colorScheme="teal" onClick={handleAddComment}>Add Comment</Button>
+      <Divider my={6} />
+      <Heading size="md" mb={4}>Submit Feedback</Heading>
+      <Text mb={4}>Provide your feedback to help us improve future events.</Text>
       <Box as="form" onSubmit={handleFeedbackSubmit} mt={6}>
         <FormControl id="feedback" isRequired>
-          <FormLabel>Submit Feedback</FormLabel>
+          <FormLabel>Feedback</FormLabel>
           <Textarea value={feedbackContent} onChange={(e) => setFeedbackContent(e.target.value)} />
         </FormControl>
         <Button type="submit" colorScheme="teal" mt={4}>Submit Feedback</Button>
