@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import { Box, Container, Heading, Text, VStack, Divider, FormControl, FormLabel, Textarea, Button, useToast } from "@chakra-ui/react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useEvents, useComments, useAddComment } from "../integrations/supabase/index.js";
 
 const EventDetail = () => {
@@ -12,6 +12,7 @@ const EventDetail = () => {
   const toast = useToast();
   const [commentContent, setCommentContent] = useState("");
   const [feedbackContent, setFeedbackContent] = useState("");
+  const [wordCloudData, setWordCloudData] = useState([]);
 
   if (eventsLoading || commentsLoading) return <Text>Loading...</Text>;
   if (eventsError) return <Text>Error loading event details</Text>;
@@ -67,6 +68,27 @@ const EventDetail = () => {
     }
   };
 
+  const generateWordCloudData = (comments) => {
+    const wordCount = {};
+    comments.forEach(comment => {
+      const words = comment.content.split(/\s+/);
+      words.forEach(word => {
+        const cleanedWord = word.toLowerCase().replace(/[^\w]/g, '');
+        if (cleanedWord) {
+          wordCount[cleanedWord] = (wordCount[cleanedWord] || 0) + 1;
+        }
+      });
+    });
+    const wordCloudArray = Object.keys(wordCount).map(word => ({ text: word, value: wordCount[word] }));
+    setWordCloudData(wordCloudArray);
+  };
+
+  useEffect(() => {
+    if (comments) {
+      generateWordCloudData(eventComments);
+    }
+  }, [comments]);
+
   return (
     <Container maxW="container.md" mt={4}>
       <Heading mb={4}>{event.name}</Heading>
@@ -87,6 +109,15 @@ const EventDetail = () => {
           <Text>No comments yet.</Text>
         )}
       </VStack>
+      <Divider my={6} />
+      <Heading size="md" mb={4}>Comments Word Cloud</Heading>
+      <Box>
+        {wordCloudData.map((word, index) => (
+          <Text key={index} fontSize={`${word.value * 10}px`} display="inline-block" mx={1}>
+            {word.text}
+          </Text>
+        ))}
+      </Box>
       <Divider my={6} />
       <Heading size="md" mb={4}>Add a Comment</Heading>
       <Text mb={4}>Join the discussion by adding your comment below.</Text>
