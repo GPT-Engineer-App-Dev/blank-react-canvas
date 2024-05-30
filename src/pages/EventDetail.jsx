@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import { Box, Container, Heading, Text, VStack, Divider, FormControl, FormLabel, Textarea, Button, useToast } from "@chakra-ui/react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useEvents, useComments, useAddComment } from "../integrations/supabase/index.js";
 
 const EventDetail = () => {
@@ -12,6 +12,31 @@ const EventDetail = () => {
   const toast = useToast();
   const [commentContent, setCommentContent] = useState("");
   const [feedbackContent, setFeedbackContent] = useState("");
+  const [wordCloudData, setWordCloudData] = useState([]);
+
+  useEffect(() => {
+    if (comments) {
+      const wordFrequency = {};
+      comments.forEach(comment => {
+        const words = comment.content.split(/\s+/);
+        words.forEach(word => {
+          word = word.toLowerCase();
+          if (wordFrequency[word]) {
+            wordFrequency[word]++;
+          } else {
+            wordFrequency[word] = 1;
+          }
+        });
+      });
+
+      const wordCloudArray = Object.keys(wordFrequency).map(word => ({
+        text: word,
+        value: wordFrequency[word],
+      }));
+
+      setWordCloudData(wordCloudArray);
+    }
+  }, [comments]);
 
   if (eventsLoading || commentsLoading) return <Text>Loading...</Text>;
   if (eventsError) return <Text>Error loading event details</Text>;
@@ -87,6 +112,24 @@ const EventDetail = () => {
           <Text>No comments yet.</Text>
         )}
       </VStack>
+      <Divider my={6} />
+      <Heading size="md" mb={4}>Word Cloud</Heading>
+      <Box mb={4} p={4} borderWidth="1px" borderRadius="lg" width="100%" height="300px" overflow="hidden" position="relative">
+        {wordCloudData.map((word, index) => (
+          <Text
+            key={index}
+            position="absolute"
+            fontSize={`${word.value * 10}px`}
+            style={{
+              top: `${Math.random() * 80}%`,
+              left: `${Math.random() * 80}%`,
+              transform: `rotate(${Math.random() * 360}deg)`,
+            }}
+          >
+            {word.text}
+          </Text>
+        ))}
+      </Box>
       <Divider my={6} />
       <Heading size="md" mb={4}>Add a Comment</Heading>
       <Text mb={4}>Join the discussion by adding your comment below.</Text>
