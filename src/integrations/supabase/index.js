@@ -153,7 +153,7 @@ export const useAddCanvasState = () => {
     });
 };
 
-export const useLoadCanvasState = (userId) => useQuery({
-    queryKey: ['canvas_state', userId],
-    queryFn: () => fromSupabase(supabase.from('canvas_states').select('*').eq('user_id', userId).order('created_at', { ascending: false }).limit(1)),
+export const useLoadCanvasState = (eventId) => useQuery({
+    queryKey: ['canvas_state', eventId],
+    queryFn: () => fromSupabase(supabase.from('canvas_states').select('*').eq('event_id', eventId).order('created_at', { ascending: false }).limit(1)),
 });
