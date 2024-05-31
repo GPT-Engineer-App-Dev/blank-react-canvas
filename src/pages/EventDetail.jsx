@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import { Box, Container, Heading, Text, VStack, Divider, FormControl, FormLabel, Textarea, Button, useToast, IconButton, HStack } from "@chakra-ui/react";
+import { Box, Container, Heading, Text, VStack, Divider, FormControl, FormLabel, Textarea, Button, useToast, IconButton, HStack, Input } from "@chakra-ui/react";
 import { FaThumbsUp, FaThumbsDown, FaLaugh, FaSadTear } from "react-icons/fa";
 import { useState, useEffect } from "react";
 import { useEvents, useComments, useAddComment } from "../integrations/supabase/index.js";
@@ -15,6 +15,7 @@ const EventDetail = () => {
   const [feedbackContent, setFeedbackContent] = useState("");
   const [wordCloudData, setWordCloudData] = useState([]);
   const [reactions, setReactions] = useState({});
+  const [email, setEmail] = useState("");
 
   useEffect(() => {
     if (comments) {
@@ -101,6 +102,29 @@ const EventDetail = () => {
     }));
   };
 
+  const handleSendToInbox = async () => {
+    try {
+      // Placeholder for email sending logic
+      console.log(`Sending event details to ${email}`);
+      toast({
+        title: "Email sent.",
+        description: `Event details have been sent to ${email}.`,
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+      });
+      setEmail("");
+    } catch (error) {
+      toast({
+        title: "Error.",
+        description: "There was an error sending the email.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+    }
+  };
+
   return (
     <Container maxW="container.md" mt={4}>
       <Heading mb={4}>{event.name}</Heading>
@@ -183,6 +207,14 @@ const EventDetail = () => {
         </FormControl>
         <Button type="submit" colorScheme="teal" mt={4}>Submit Feedback</Button>
       </Box>
+      <Divider my={6} />
+      <Heading size="md" mb={4}>Send to Inbox</Heading>
+      <Text mb={4}>Enter your email address to receive the event details in your inbox.</Text>
+      <FormControl id="email" isRequired>
+        <FormLabel>Email</FormLabel>
+        <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+      </FormControl>
+      <Button mt={4} colorScheme="teal" onClick={handleSendToInbox}>Send to Inbox</Button>
     </Container>
   );
 };
