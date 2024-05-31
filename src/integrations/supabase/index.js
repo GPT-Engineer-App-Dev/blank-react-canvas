@@ -135,25 +135,3 @@ export const useUpdateVenue = () => {
         },
     });
 };
-
-// Hooks for canvas_states table
-
-export const useCanvasStates = () => useQuery({
-    queryKey: ['canvas_states'],
-    queryFn: () => fromSupabase(supabase.from('canvas_states').select('*')),
-});
-
-export const useAddCanvasState = () => {
-    const queryClient = useQueryClient();
-    return useMutation({
-        mutationFn: (newState) => fromSupabase(supabase.from('canvas_states').insert([newState])),
-        onSuccess: () => {
-            queryClient.invalidateQueries('canvas_states');
-        },
-    });
-};
-
-export const useLoadCanvasState = (userId) => useQuery({
-    queryKey: ['canvas_state', userId],
-    queryFn: () => fromSupabase(supabase.from('canvas_states').select('*').eq('user_id', userId).order('created_at', { ascending: false }).limit(1)),
-});
