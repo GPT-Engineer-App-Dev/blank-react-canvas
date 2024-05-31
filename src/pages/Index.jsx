@@ -8,7 +8,7 @@ const Index = () => {
   const canvasRef = useRef(null);
   const [canvasState, setCanvasState] = useState(null);
   const addCanvasState = useAddCanvasState();
-  const { data: loadedState } = useLoadCanvasState({ event_id: 1 }); // Filtering by event_id
+  const { data: loadedState } = useLoadCanvasState(1); // Assuming event_id is 1 for now
 
   useEffect(() => {
     if (loadedState && loadedState.length > 0) {
@@ -21,11 +21,11 @@ const Index = () => {
     }
   }, [loadedState]);
 
-  const saveCanvasState = async (event_id) => {
+  const saveCanvasState = async () => {
     const canvas = canvasRef.current;
     const dataUrl = canvas.toDataURL();
     try {
-      await addCanvasState.mutateAsync({ event_id, state: dataUrl });
+      await addCanvasState.mutateAsync({ event_id: 1, state: dataUrl }); // Assuming event_id is 1 for now
       alert("Canvas state saved successfully!");
     } catch (error) {
       alert("Error saving canvas state.");
